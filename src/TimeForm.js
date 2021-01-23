@@ -44,8 +44,8 @@ const useStyles = makeStyles((theme) => ({
         color: "#555",
         cursor: "pointer",
         "&:hover": {
-            background: "green",
-            color: "#fff"
+            background: theme.palette.primary.light,
+            // color: "#f"
           },
       },
 
@@ -59,8 +59,8 @@ const useStyles = makeStyles((theme) => ({
       },
 
       boxSelected: {
-        backgroundColor: "green",
-        border: "1px solid #999",
+        backgroundColor:  theme.palette.primary.main,
+        border: `1px solid ${theme.palette.primary.light}`,
         margin: "5px",
         padding: "5px",
         color: "#fff",
@@ -75,6 +75,11 @@ const useStyles = makeStyles((theme) => ({
         color: "#fff"
         
       },
+
+      pageTitle:{
+        color : theme.palette.primary.main,
+        marginBottom: "15px"
+      }
 
   }));
 
@@ -136,13 +141,13 @@ export default function TimeForm() {
         // }
 
     
-        if (beforeFeb())
-        {
-          timeSlotsTmp.forEach(time =>
-            {
-              time.available = false;
-            });
-        }
+        // if (beforeFeb())
+        // {
+        //   timeSlotsTmp.forEach(time =>
+        //     {
+        //       time.available = false;
+        //     });
+        // }
 
         setTimeSlots(timeSlotsTmp);
         setDataLoaded(true);
@@ -197,7 +202,7 @@ export default function TimeForm() {
 
   return (
     <React.Fragment>
-      <Typography variant="h6" gutterBottom>
+      <Typography variant="h6" gutterBottom className={classes.pageTitle}>
         Pick a Time
       </Typography>
 
@@ -214,12 +219,23 @@ export default function TimeForm() {
                   <div style={{fontSize:"1.2rem", paddingTop:"10px", paddingBottom:"10px", color:"#db0000" , fontWeight: "500", background:"#fff5f5"}}>
                      Sorry this day is already fully booked! 
                      <br/>Please choose an alternative day.
-                     <br/> * All dates are fully booked until 1st February 2021. 
                   </div>
                    
                 </React.Fragment>
 
               )}
+
+                {timeSlots.length === 0 &&  (
+
+                <React.Fragment>
+                  <div style={{fontSize:"1.2rem", paddingTop:"10px", paddingBottom:"10px", color:"#db0000" , fontWeight: "500", background:"#fff5f5"}}>
+                    Sorry the clinic is closed on this day! 
+                    <br/>Please choose an alternative day.
+                  </div>
+                  
+                </React.Fragment>
+
+                )}
 
               <BrowserView>
                   <div className={classes.root}>
@@ -284,6 +300,8 @@ export default function TimeForm() {
   );
 }
 
+
+
 const checkFullyBooked = (timeSlots) =>
 {
     let available = false;
@@ -294,7 +312,7 @@ const checkFullyBooked = (timeSlots) =>
       }
     });
 
-    return !available;
+    return !available && timeSlots.length > 0;
 }
 
 

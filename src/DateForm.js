@@ -17,7 +17,7 @@ import Grid from '@material-ui/core/Grid';
 import Skeleton from '@material-ui/lab/Skeleton';
 
 
-import { format, addMinutes } from 'date-fns';
+import { format, addMinutes, isWeekend } from 'date-fns';
 
 import { enGB, } from 'date-fns/locale'
 
@@ -40,6 +40,8 @@ class UTCUtils extends DateFnsUtils {
   //   return dateformat(date, 'd');
   // }
 
+
+
 }
 
 
@@ -47,6 +49,11 @@ const useStyles = makeStyles((theme) => ({
 
   loadingBox: {
     
+  },
+
+  pageTitle:{
+    color : theme.palette.primary.main,
+    marginBottom: "15px"
   }
 
 }));
@@ -127,6 +134,9 @@ export default function DateForm() {
   {
     var result = false;
 
+    if (isWeekend(date))
+      return true
+
     if (dateformat(date,'yyyy-mm-dd') < dateformat(firstAvailableDay,'yyyy-mm-dd'))
     {
        return true;
@@ -154,7 +164,7 @@ export default function DateForm() {
 
     <React.Fragment>
                
-                <Typography variant="h6" gutterBottom>
+                <Typography variant="h6" gutterBottom className={classes.pageTitle}>
                     Pick a Date
                 </Typography>
 

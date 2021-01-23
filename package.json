@@ -18,7 +18,7 @@
     "@testing-library/jest-dom": "^5.11.5",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
-    "axios": "^0.21.0",
+    "axios": "^0.21.1",
     "axios-retry": "^3.1.9",
     "date-fns": "^2.0.0-beta.5",
     "date-fns-tz": "^1.0.12",
@@ -32,6 +32,7 @@
     "react": "^17.0.1",
     "react-device-detect": "^1.14.0",
     "react-dom": "^17.0.1",
+    "react-reveal": "^1.2.2",
     "react-scripts": "4.0.0",
     "retry-axios": "^2.4.0",
     "web-vitals": "^0.2.4"

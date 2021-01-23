@@ -9,18 +9,20 @@ import errorImage from './images/error.png';
 import * as dateformat from 'dateformat';
 import Alert from '@material-ui/lab/Alert';
 
+import Fade from "react-reveal/Fade";
 
 
 const useStyles = makeStyles((theme) => ({
 
     bold: {
         fontWeight: "800",
-        padding: "5px"
+        padding: "5px",
+        color: theme.palette.secondary.main
       },
 
       doneImage: {
-        width: "240px",
-        height: "150px",
+        width: "205px",
+        height: "207px",
         margin: "20px"
       },
 
@@ -29,6 +31,13 @@ const useStyles = makeStyles((theme) => ({
         height: "190px",
         margin: "20px"
       },
+      thankText:{
+        color: theme.palette.primary.main
+      },
+
+      error:{
+        color: theme.palette.secondary.main
+      }
     
 
 
@@ -60,13 +69,16 @@ export default function ResultsForm() {
       {state.finalResults.length === 1 &&
         state.finalResults[0].data.status === `OK` && (
           <React.Fragment>
+
+          <Fade up>
+
             <img
               className={classes.doneImage}
               src={doneImage}
               alt="Done image"
             />
 
-            <Typography variant="h5" gutterBottom>
+            <Typography variant="h5" gutterBottom className={classes.thankText}>
               Thank you for your Booking.
             </Typography>
             <br />
@@ -76,6 +88,8 @@ export default function ResultsForm() {
               emailed your booking information, and will look forward to meet
               you at the clinic.
             </Typography>
+
+            </Fade>
           </React.Fragment>
         )}
 
@@ -88,7 +102,7 @@ export default function ResultsForm() {
               alt="Error image"
             />
 
-            <Typography variant="h5" gutterBottom>
+            <Typography variant="h5" gutterBottom className={classes.error}>
               Sorry, There is a Problem with your Booking.
             </Typography>
             <br />

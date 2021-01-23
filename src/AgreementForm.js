@@ -15,7 +15,7 @@ import TimeForm from './TimeForm';
 import InformationForm from './InformationForm';
 import ReviewForm from './ReviewForm';
 import GlobalState from './GlobalState';
-import AddressForm from './AddressForm';
+import AddressForm from './PackageForm';
 import BookService from './services/BookService';
 
 import Dialog from '@material-ui/core/Dialog';
@@ -116,20 +116,25 @@ const useStyles = makeStyles((theme) => ({
   },
   privacyButton: {
     marginBottom : "20px",
-    width: "115px"
+    width: "115px",
+    color:"#fff",
+    backgroundColor : "#444",
+    "&:hover": {
+      background: "#000",
+      color: "#fff"
+    },
   },
 
   faqButton: {
     marginBottom : "20px",
     marginLeft : "10px",
-    backgroundColor : "#2f942e",
+    backgroundColor : "#444",
     "&:hover": {
-      background: "green",
+      background: "#000",
       color: "#fff"
     },
-    textDecoration : "none !important",
-    width: "115px"
-
+    width: "115px",
+    color:"#fff"
   },
 
   getStartedButton: {

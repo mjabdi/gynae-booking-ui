@@ -15,7 +15,6 @@ import TimeForm from './TimeForm';
 import InformationForm from './InformationForm';
 import ReviewForm from './ReviewForm';
 import GlobalState from './GlobalState';
-import AddressForm from './AddressForm';
 import BookService from './services/BookService';
 
 import Dialog from '@material-ui/core/Dialog';
@@ -43,6 +42,7 @@ import ResultsForm from './ResultsForm';
 import LiveHelpIcon from '@material-ui/icons/LiveHelp';
 import faq from './FAQ';
 import dateformat from 'dateformat';
+import PackageForm from './PackageForm';
 
 
 function Copyright() {
@@ -125,20 +125,25 @@ const useStyles = makeStyles((theme) => ({
 
   privacyButton: {
     marginBottom : "20px",
-    width: "115px"
+    width: "115px",
+    color:"#fff",
+    backgroundColor : "#444",
+    "&:hover": {
+      background: "#000",
+      color: "#fff"
+    },
   },
 
   faqButton: {
     marginBottom : "20px",
     marginLeft : "10px",
-    backgroundColor : "#2f942e",
+    backgroundColor : "#444",
     "&:hover": {
-      background: "green",
+      background: "#000",
       color: "#fff"
     },
-    textDecoration : "none !important",
-    width: "115px"
-
+    width: "115px",
+    color:"#fff"
   },
 
   backdrop: {
@@ -148,7 +153,7 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-const steps = ['Appoinment Date', 'Appoinment Time', 'Basic Info', 'Address Info','Review'];
+const steps = ['Appoinment Date', 'Appoinment Time', 'Basic Info','Choose Service' , 'Review'];
 
 function getStepContent(step) {
   switch (step) {
@@ -159,11 +164,11 @@ function getStepContent(step) {
     case 2:
       return <InformationForm />;
     case 3:
-      return <AddressForm />;
+      return <PackageForm />;
     case 4:
-        return <ReviewForm />;
+      return <ReviewForm />;
     default:
-      throw new Error('Unknown step');
+      throw new Error("Unknown step");
   }
 }
 
@@ -260,46 +265,29 @@ export default function Checkout() {
         referrer = '/'
       }
 
-      if (!state.proceedToSubmit)
-      {
         const personInfo = {
-          gender: state.gender,
-          title: state.title,
-          firstname: state.firstname,
-          lastname: state.lastname,
-          birthDate: state.birthDate,
+          fullname: state.fullname,
           email: state.email,
           phone: state.phone,
-          postCode: state.postCode,
-          address: state.address,
           notes: state.notes,
-          certificate: state.certificate,
-          passportNumber: state.passportNumber,
-          passportNumber2: state.passportNumber2,
-          antiBodyTest: state.antiBodyTest ?? false
+          service: state.package,
+          bookingDate: dateformat(new Date(state.bookingDate.toUTCString().slice(0, -4)),'yyyy-mm-dd'),
+          bookingTime: state.bookingTime,
+          bookingRef: ref,
+          referrer: referrer
         };
     
-        const promise = BookService.bookAppointment({...personInfo, bookingDate:  dateformat(new Date(state.bookingDate.toUTCString().slice(0, -4)),'yyyy-mm-dd'), bookingTime: state.bookingTime, bookingRef: ref, referrer: referrer });
-        promiseArray.push(promise);
-      }
-  
-      for (var i=0 ; i < state.persons?.length; i++){
-        promiseArray.push(BookService.bookAppointment({...state.persons[i],bookingDate: dateformat(new Date(state.bookingDate.toUTCString().slice(0, -4)),'yyyy-mm-dd'), bookingTime: state.bookingTime, bookingRef: ref, referrer: referrer}));
-      }
-      
-      Promise.all(promiseArray).then( (values) => {
-
-        setState(state => ({...state, finalResults: values}));
+       BookService.bookAppointment(personInfo).then( res => {
+        setState(state => ({...state, finalResults: [res]}));
 
         setSubmiting(false);
         setActiveStep(state.activeStep + 1);
-  
-      }).catch( (errs) =>
-      {
-        console.log(`Error :  ${errs}`);
-        setSubmiting(false);
-      });
-
+       }).catch(err =>
+       {
+         console.error(`Error :  ${err}`);
+         setSubmiting(false);
+       });
+    
     }).catch( (err) =>
     {
       console.log(`Cannot Get REF NO. : ${err}`);
@@ -318,11 +306,11 @@ export default function Checkout() {
 
     if (state.activeStep === 4)
     {
-      if (!state.dataConfirmed)
-      {
-        setState(state => ({...state, dataConfirmedError : true }));
-        return;
-      }
+      // if (!state.dataConfirmed)
+      // {
+      //   setState(state => ({...state, dataConfirmedError : true }));
+      //   return;
+      // }
   
 
       setSubmiting(true);
@@ -343,218 +331,246 @@ export default function Checkout() {
       <CssBaseline />
       <AppBar position="absolute" color="default" className={classes.appBar}>
         <Toolbar>
-
-
-        <Grid
+          <Grid
             container
             direction="row"
-            spacing= {1}
+            spacing={1}
             justify="center"
             alignItems="center"
-        >
-
-
+          >
             <Grid item item xs={10}>
-                  <Typography  style={{fontWeight: "400"}} variant="h6" color="inherit" noWrap>
-                    Medical Express Clinic
-                  </Typography>
+              <Typography
+                style={{ fontWeight: "400" }}
+                variant="h6"
+                color="inherit"
+                noWrap
+              >
+                Medical Express Clinic
+              </Typography>
             </Grid>
 
             <Grid item xs={2}>
-                    <img className={classes.logoImage} src={logoImage} alt="logo image"/> 
+              <img
+                className={classes.logoImage}
+                src={logoImage}
+                alt="logo image"
+              />
             </Grid>
-
-        </Grid>  
+          </Grid>
         </Toolbar>
       </AppBar>
       <main className={classes.layout}>
         <Paper className={classes.paper}>
 
-
-          <Typography component="h1" variant="h6" align="center">
-                Book Appointment Online
-          </Typography>
-
-      
+          
+          {state.activeStep <= 4 && (
+            <Typography component="h1" variant="h6" align="center">
+              Book Appointment Online
+            </Typography>
+          )}
 
           <React.Fragment>
-              {state.activeStep < steps.length ? (
-                  <React.Fragment>
-                        <BrowserView>
-                                <Stepper activeStep={state.activeStep} className={classes.stepper}>
-                                    {steps.map((label) => (
-                                    <Step key={label}>
-                                        <StepLabel>{label}</StepLabel>
-                                    </Step>
-                                    ))}
-                                </Stepper>
-                        </BrowserView>
+            {state.activeStep < steps.length ? (
+              <React.Fragment>
+                <BrowserView>
+                  <Stepper
+                    activeStep={state.activeStep}
+                    className={classes.stepper}
+                  >
+                    {steps.map((label) => (
+                      <Step key={label}>
+                        <StepLabel>{label}</StepLabel>
+                      </Step>
+                    ))}
+                  </Stepper>
+                </BrowserView>
 
-                        <MobileView>
-                                    <MobileStepper 
-                                            steps={maxSteps}
-                                            position="static"
-                                            variant="progress"
-                                            
-                                            activeStep={state.activeStep}
-                                    />
-                        </MobileView>  
-                  </React.Fragment>
-              ) : (
-                  <React.Fragment>
-
-                      
-                  </React.Fragment>
-              )}
-          </React.Fragment>                  
+                <MobileView>
+                  <MobileStepper
+                    steps={maxSteps}
+                    position="static"
+                    variant="progress"
+                    activeStep={state.activeStep}
+                  />
+                </MobileView>
+              </React.Fragment>
+            ) : (
+              <React.Fragment></React.Fragment>
+            )}
+          </React.Fragment>
 
           {/* <PersonsBox/> */}
 
           <React.Fragment>
             {state.activeStep === steps.length ? (
-
-              <ResultsForm/>
-
+              <ResultsForm />
             ) : (
               <React.Fragment>
                 {getStepContent(state.activeStep)}
                 <div className={classes.buttons}>
                   {state.activeStep !== 0 && (
-                    <Button disabled={submiting} onClick={handleBack} onTouchTap = {handleBack}  className={classes.button}>
+                    <Button
+                      disabled={submiting}
+                      onClick={handleBack}
+                      onTouchTap={handleBack}
+                      className={classes.button}
+                    >
                       Back
                     </Button>
                   )}
 
-                  {((state.activeStep === 2 || state.activeStep === 3 ) && state.persons && state.persons.length >= 1) && (
-                    <Button 
-                            // variant="contained"
-                            color="secondary"
-                            onTouchTap = {proceedToSubmit} 
-                            onClick={proceedToSubmit} className={classes.button}>
-                      Skip to Submit
-                    </Button>
-                  )}
+                  {(state.activeStep === 2 || state.activeStep === 3) &&
+                    state.persons &&
+                    state.persons.length >= 1 && (
+                      <Button
+                        // variant="contained"
+                        color="secondary"
+                        onTouchTap={proceedToSubmit}
+                        onClick={proceedToSubmit}
+                        className={classes.button}
+                      >
+                        Skip to Submit
+                      </Button>
+                    )}
 
                   <Button
-                    disabled={submiting} 
+                    disabled={submiting}
                     variant="contained"
                     color="primary"
-                    onTouchTap = {handleNext} 
+                    onTouchTap={handleNext}
                     onClick={handleNext}
                     className={classes.button}
                   >
-                    {state.activeStep === steps.length - 1 ? 'Submit' : 'Next'}
+                    {state.activeStep === steps.length - 1 ? "Submit" : "Next"}
                   </Button>
-                  
-
-
-
-
                 </div>
               </React.Fragment>
             )}
           </React.Fragment>
-
         </Paper>
 
-        <Button 
-                  variant="contained" 
-                  className={classes.privacyButton} 
-                  color="secondary"
-                  startIcon={<HttpsIcon/>}
-                  onClick={handleClickOpen('paper')}
-                  onTouchTap={handleClickOpen('paper')} 
-                  >
-             Privacy
-         </Button>
-         <Button 
-                  variant="contained" 
-                  className={classes.faqButton} 
-                  color="secondary"
-                  startIcon={<LiveHelpIcon/>}
-                  onClick={handleClickOpenFAQ('paper')}
-                  onTouchTap={handleClickOpenFAQ('paper')} 
-                  >
-             FAQ
-         </Button>
-         <Dialog
-                        open={open}
-                        onClose={handleClose}
-                        scroll={scroll}
-                        aria-labelledby="scroll-dialog-title"
-                        aria-describedby="scroll-dialog-description"
-                      >
-                        <DialogTitle id="scroll-dialog-title">Application Disclaimer</DialogTitle>
-                        <DialogContent dividers={scroll === 'paper'}>
-                          <DialogContentText
-                            id="scroll-dialog-description"
-                            ref={descriptionElementRef}
-                            tabIndex={-1}
-                          >
-                            <div style={{textAlign:"justify", padding:"10px"}}>
-                              Medical Express Clinic will not contact you for any other reason than to share your test results, and certificate if selected, via the email address provided. The information provided to us via this registration form is never shared with any other organisations, except when this is required by law. 
+        <Button
+          variant="contained"
+          className={classes.privacyButton}
+          color="secondary"
+          startIcon={<HttpsIcon />}
+          onClick={handleClickOpen("paper")}
+          onTouchTap={handleClickOpen("paper")}
+        >
+          Privacy
+        </Button>
+        <Button
+          variant="contained"
+          className={classes.faqButton}
+          color="secondary"
+          startIcon={<LiveHelpIcon />}
+          onClick={handleClickOpenFAQ("paper")}
+          onTouchTap={handleClickOpenFAQ("paper")}
+        >
+          FAQ
+        </Button>
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          scroll={scroll}
+          aria-labelledby="scroll-dialog-title"
+          aria-describedby="scroll-dialog-description"
+        >
+          <DialogTitle id="scroll-dialog-title">
+            Application Disclaimer
+          </DialogTitle>
+          <DialogContent dividers={scroll === "paper"}>
+            <DialogContentText
+              id="scroll-dialog-description"
+              ref={descriptionElementRef}
+              tabIndex={-1}
+            >
+              <div style={{ textAlign: "justify", padding: "10px" }}>
+                Medical Express Clinic will not contact you for any other reason
+                than to share your test results, and certificate if selected,
+                via the email address provided. The information provided to us
+                via this registration form is never shared with any other
+                organisations, except when this is required by law. Information
+                provided will never be used for marketing purposes, you cannot
+                opt in. In the case of a positive swab result, our doctor will
+                call on the telephone number provided to inform you of your
+                result and provide additional advice or guidance.
+              </div>
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="primary">
+              Close
+            </Button>
+          </DialogActions>
+        </Dialog>
 
-                                Information provided will never be used for marketing purposes, you cannot opt in.
+        <Dialog
+          open={openFAQ}
+          onClose={handleCloseFAQ}
+          scroll={scrollFAQ}
+          aria-labelledby="scroll-dialog-title-FAQ"
+          aria-describedby="scroll-dialog-description-FAQ"
+        >
+          <DialogTitle id="scroll-dialog-title">FAQ</DialogTitle>
+          <DialogContent dividers={scroll === "paper"}>
+            <DialogContentText
+              id="scroll-dialog-description-FAQ"
+              ref={descriptionElementRefFAQ}
+              tabIndex={-1}
+            >
+              <div style={{ textAlign: "justify", padding: "10px" }}>
+                {faq.map((element) => (
+                  <React.Fragment>
+                    <p
+                      style={{
+                        borderLeft: "4px solid #f280c4",
+                        background: "#eee",
+                        fontWeight: "600",
+                        paddingLeft: "10px",
+                        paddingRight: "10px",
+                        lineHeight: "30px",
+                      }}
+                    >
+                      <span style={{ color: "#f280c4", fontSize: "24px" }}>
+                        {" "}
+                        Q.{" "}
+                      </span>
+                      {element.question}
+                    </p>
 
-                                In the case of a positive swab result, our doctor will call on the telephone number provided to inform you of your result and provide additional advice or guidance.
-                          </div>
-                          </DialogContentText>
-                        </DialogContent>
-                        <DialogActions>
-                          <Button onClick={handleClose} color="primary">
-                            Close
-                          </Button>
-                      
-                        </DialogActions>
-      </Dialog>
+                    <p
+                      style={{
+                        borderLeft: "4px solid #999",
+                        background: "#fff",
+                        fontWeight: "400",
+                        color: "#555",
+                        paddingLeft: "10px",
+                        paddingRight: "30px",
+                        lineHeight: "50px",
+                      }}
+                    >
+                      <span style={{ color: "#555", fontSize: "24px" }}>
+                        {" "}
+                        A.{" "}
+                      </span>
+                      {element.answer}
+                    </p>
+                  </React.Fragment>
+                ))}
+              </div>
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseFAQ} color="primary">
+              Close
+            </Button>
+          </DialogActions>
+        </Dialog>
 
-      <Dialog
-                        open={openFAQ}
-                        onClose={handleCloseFAQ}
-                        scroll={scrollFAQ}
-                        aria-labelledby="scroll-dialog-title-FAQ"
-                        aria-describedby="scroll-dialog-description-FAQ"
-                      >
-                        <DialogTitle id="scroll-dialog-title">FAQ</DialogTitle>
-                        <DialogContent dividers={scroll === 'paper'}>
-                          <DialogContentText
-                            id="scroll-dialog-description-FAQ"
-                            ref={descriptionElementRefFAQ}
-                            tabIndex={-1}
-                          >
-                            <div style={{textAlign:"justify", padding:"10px"}}>
-                             
-                            {faq.map(element => (
-                              <React.Fragment>
-                                <p style={{borderLeft: "4px solid red", background: "#eee", fontWeight: "600", paddingLeft: "10px",paddingRight: "10px", lineHeight: "30px"}}>
-                                  <span style={{color: "red" , fontSize:"24px"}}> Q. </span>
-                                    {element.question} 
-                                </p>
-
-                                <p style={{borderLeft: "4px solid #999", background: "#fff", fontWeight: "400", color: "#555" ,paddingLeft: "10px",paddingRight: "30px", lineHeight: "50px"}}>
-                                  <span style={{color: "#555" , fontSize:"24px"}}> A. </span>
-                                    {element.answer} 
-                                </p>
-
-                              </React.Fragment>
-
-                            ))}
-
-                          </div>
-                          </DialogContentText>
-                        </DialogContent>
-                        <DialogActions>
-                          <Button onClick={handleCloseFAQ} color="primary">
-                            Close
-                          </Button>
-                      
-                        </DialogActions>
-          </Dialog>
-
-      <Backdrop className={classes.backdrop} open={submiting} >
-        <CircularProgress color="inherit" />
-      </Backdrop>
-
+        <Backdrop className={classes.backdrop} open={submiting}>
+          <CircularProgress color="inherit" />
+        </Backdrop>
 
         <Copyright />
       </main>

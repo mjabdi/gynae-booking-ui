@@ -27,6 +27,8 @@ import logoImage from './images/logo.png';
 import LiveHelpIcon from '@material-ui/icons/LiveHelp';
 import faq from './FAQ';
 
+import gynaeImage from './images/gynae-clinic.png'
+
 
 function Copyright() {
   return (
@@ -108,20 +110,25 @@ const useStyles = makeStyles((theme) => ({
 
   privacyButton: {
     marginBottom : "20px",
-    width: "115px"
+    width: "115px",
+    color:"#fff",
+    backgroundColor : "#444",
+    "&:hover": {
+      background: "#000",
+      color: "#fff"
+    },
   },
 
   faqButton: {
     marginBottom : "20px",
     marginLeft : "10px",
-    backgroundColor : "#2f942e",
+    backgroundColor : "#444",
     "&:hover": {
-      background: "green",
+      background: "#000",
       color: "#fff"
     },
-    textDecoration : "none !important",
-    width: "115px"
-
+    width: "115px",
+    color:"#fff"
   },
 
   textContent : {
@@ -153,6 +160,9 @@ const useStyles = makeStyles((theme) => ({
   AirIcon : {
       marginRight : "10px",
       fontSize: "32px"
+  },
+  gynaeLogo:{
+
   }
 
 }));
@@ -219,7 +229,7 @@ export default function WelcomeForm() {
 
 
 const getStartedClicked = (event) => {
-    setState(state => ({...state, getStarted: true}));
+    setState(state => ({...state, getStarted: true, agreed: true}));
 }
 
   return (
@@ -257,10 +267,27 @@ const getStartedClicked = (event) => {
       </AppBar>
       <main className={classes.layout}>
         <Paper className={classes.paper}>
-         
           {state.firstname && state.firstname.length > 0 && (
-            <div style={{textAlign:'center', fontSize:"1rem", marginBottom:"10px", color:"#777",backgroundColor:"#f7fbff",padding:"20px"}}>
-                Welcome back <span style={{fontWeight:"500", color:"#333", fontStyle:"italic"}}>{state.firstname}</span>
+            <div
+              style={{
+                textAlign: "center",
+                fontSize: "1rem",
+                marginBottom: "10px",
+                color: "#777",
+                backgroundColor: "#f7fbff",
+                padding: "20px",
+              }}
+            >
+              Welcome back{" "}
+              <span
+                style={{
+                  fontWeight: "500",
+                  color: "#333",
+                  fontStyle: "italic",
+                }}
+              >
+                {state.firstname}
+              </span>
             </div>
           )}
 
@@ -277,11 +304,11 @@ const getStartedClicked = (event) => {
                 justifyContent: "center",
               }}
             >
-              <AirplanemodeActiveIcon
-                className={classes.AirIcon}
-                color="primary"
+              <img
+                className={classes.gynaeLogo}
+                src={gynaeImage}
+                alt="logo image"
               />
-              RT-PCR Fit to Fly Test - £199
             </div>
           </Typography>
 
@@ -290,7 +317,7 @@ const getStartedClicked = (event) => {
               isMobile ? classes.textContentMobile : classes.textContent
             }
           >
-            Universally accepted for international travel to all destinations.
+           Gynae Clinic is proud to offer an exceptional level of service that consistently exceeds the expectations of our patients.
           </p>
 
           <p
@@ -298,8 +325,7 @@ const getStartedClicked = (event) => {
               isMobile ? classes.textContentMobile : classes.textContent
             }
           >
-            Nasopharyngeal swab sample taken from the back of the nose and
-            throat.
+           Flexible, same-day appointments, a dedicated and talented team of doctors and staff, and the latest treatments set our clinic apart from the rest.
           </p>
 
           <p
@@ -307,43 +333,7 @@ const getStartedClicked = (event) => {
               isMobile ? classes.textContentMobile : classes.textContent
             }
           >
-            COVID-19 PCR test to detect viral RNA.
-          </p>
-
-          <p
-            className={
-              isMobile ? classes.textContentMobile : classes.textContent
-            }
-          >
-            Guaranteed results within 48 hours - over 90% of our results return
-            before 24 hours of clinic appointment.
-          </p>
-
-          <p
-            className={
-              isMobile ? classes.textContentMobile : classes.textContent
-            }
-          >
-            Secure, verifiable results sent in PDF format via email, hard copies
-            available to collect.
-          </p>
-
-          <p
-            className={
-              isMobile ? classes.textContentMobile : classes.textContent
-            }
-          >
-            No card details or payment necessary.
-          </p>
-
-          <p
-            className={
-              isMobile ? classes.textContentMobile : classes.textContent
-            }
-          >
-            Plans change and you may need to cancel or rearrange your
-            appointment. We take payment for your test only when you attend the
-            clinic.
+           Our Gynae Clinic is conveniently located on Harley Street, central London to ensure all your gynaecological needs are met quickly, easily, and with minimal disruption to your schedule.
           </p>
 
           <Button
@@ -360,7 +350,7 @@ const getStartedClicked = (event) => {
         <Button
           variant="contained"
           className={classes.privacyButton}
-          color="secondary"
+          color="default"
           startIcon={<HttpsIcon />}
           onClick={handleClickOpen("paper")}
           onTouchTap={handleClickOpen("paper")}
@@ -371,7 +361,7 @@ const getStartedClicked = (event) => {
         <Button
           variant="contained"
           className={classes.faqButton}
-          color="secondary"
+          color="default"
           startIcon={<LiveHelpIcon />}
           onClick={handleClickOpenFAQ("paper")}
           onTouchTap={handleClickOpenFAQ("paper")}
@@ -433,7 +423,7 @@ const getStartedClicked = (event) => {
                   <React.Fragment>
                     <p
                       style={{
-                        borderLeft: "4px solid red",
+                        borderLeft: "4px solid #f280c4",
                         background: "#eee",
                         fontWeight: "600",
                         paddingLeft: "10px",
@@ -441,7 +431,7 @@ const getStartedClicked = (event) => {
                         lineHeight: "30px",
                       }}
                     >
-                      <span style={{ color: "red", fontSize: "24px" }}>
+                      <span style={{ color: "#f280c4", fontSize: "24px" }}>
                         {" "}
                         Q.{" "}
                       </span>
