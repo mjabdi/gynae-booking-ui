@@ -303,7 +303,7 @@ export default function ReviewForm() {
                       />
                       Check-up Duration:
                     </span>
-                    45 minutes
+                     Up-to 45 minutes
                   </li>
 
                   <li className={classes.li}>

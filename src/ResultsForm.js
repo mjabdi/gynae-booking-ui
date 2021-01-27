@@ -70,7 +70,7 @@ export default function ResultsForm() {
         state.finalResults[0].data.status === `OK` && (
           <React.Fragment>
 
-          <Fade up>
+          <Fade down>
 
             <img
               className={classes.doneImage}

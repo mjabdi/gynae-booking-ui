@@ -147,7 +147,7 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "justify",
     paddingLeft: "30px",
     paddingRight: "30px",
-    lineHeight: "2.2em",
+    lineHeight: "1.5rem",
     fontWeight : "400"
 },
 
@@ -292,7 +292,7 @@ const getStartedClicked = (event) => {
           )}
 
           <Typography
-            style={{ fontWeight: 700, marginBottom: "50px" }}
+            style={{ fontWeight: 700, marginBottom: "20px" }}
             component="h1"
             variant="h6"
             align="center"

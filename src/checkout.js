@@ -362,7 +362,7 @@ export default function Checkout() {
       <main className={classes.layout}>
         <Paper className={classes.paper}>
 
-          
+
           {state.activeStep <= 4 && (
             <Typography component="h1" variant="h6" align="center">
               Book Appointment Online
@@ -569,7 +569,14 @@ export default function Checkout() {
         </Dialog>
 
         <Backdrop className={classes.backdrop} open={submiting}>
-          <CircularProgress color="inherit" />
+                  <Grid container direction="column" justify="center" alignItems="center" spacing={2}>
+                         <Grid item>
+                            <CircularProgress color="inherit" />
+                         </Grid>
+                         <Grid item>
+                                 <span style={{textAlign:"center", color:"#fff"}}> Please wait ... </span>
+                         </Grid>
+                     </Grid>
         </Backdrop>
 
         <Copyright />
