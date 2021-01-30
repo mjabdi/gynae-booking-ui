@@ -84,7 +84,7 @@ export default function ResultsForm() {
             <br />
             <Typography variant="subtitle1">
               Your booking number is{" "}
-              <span className={classes.bold}>{`"${state.ref}"`}</span> . We have
+              <span className={classes.bold}>{`"${state.bookingRef}"`}</span> . We have
               emailed your booking information, and will look forward to meet
               you at the clinic.
             </Typography>
@@ -176,7 +176,7 @@ export default function ResultsForm() {
               <br />
               <Typography variant="subtitle1">
                 Your booking number is{" "}
-                <span className={classes.bold}>{`"${state.ref}"`}</span> . We
+                <span className={classes.bold}>{`"${state.bookingRef}"`}</span> . We
                 have emailed your booking information, and will look forward to
                 meet you at the clinic.
               </Typography>

@@ -17,7 +17,8 @@ import Grid from '@material-ui/core/Grid';
 import Skeleton from '@material-ui/lab/Skeleton';
 
 
-import { format, addMinutes, isWeekend } from 'date-fns';
+import { format, addMinutes, isWeekend, getDay } from 'date-fns';
+
 
 import { enGB, } from 'date-fns/locale'
 
@@ -134,8 +135,13 @@ export default function DateForm() {
   {
     var result = false;
 
-    if (isWeekend(date))
-      return true
+    // if (isWeekend(date))
+    //   return true
+
+    // console.log(getDay(date))
+
+    if (getDay(date) === 1 || getDay(date) === 2 || getDay(date) === 3 ||  getDay(date) === 6 ||  getDay(date) === 0)
+      return true  
 
     if (dateformat(date,'yyyy-mm-dd') < dateformat(firstAvailableDay,'yyyy-mm-dd'))
     {

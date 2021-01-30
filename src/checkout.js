@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from '@material-ui/core/AppBar';
@@ -43,6 +43,7 @@ import LiveHelpIcon from '@material-ui/icons/LiveHelp';
 import faq from './FAQ';
 import dateformat from 'dateformat';
 import PackageForm from './PackageForm';
+import PayForm from './PayForm';
 
 
 function Copyright() {
@@ -153,7 +154,7 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-const steps = ['Appoinment Date', 'Appoinment Time', 'Basic Info','Choose Service' , 'Review'];
+const steps = ['Appoinment Date', 'Appoinment Time', 'Basic Info','Choose Service' , 'Review', 'Pay Deposit' ];
 
 function getStepContent(step) {
   switch (step) {
@@ -167,6 +168,8 @@ function getStepContent(step) {
       return <PackageForm />;
     case 4:
       return <ReviewForm />;
+    case 5: 
+        return <PayForm />;   
     default:
       throw new Error("Unknown step");
   }
@@ -233,13 +236,22 @@ export default function Checkout() {
 
 
 
- // const [activeStep, setActiveStep] = React.useState(0);
+ const [activeStep, _setActiveStep] = React.useState(0);
  
- const setActiveStep = (step) => {
-  setState(state => ({...state, activeStep : step}));
- }
+const setActiveStep = (step) =>
+{
+  _setActiveStep(step)
+  setState(state => ({...state, activeStep: step}))
+}
+
+ useEffect(() =>
+ {
+  _setActiveStep(state.activeStep)
+ },[state.activeStep])
 
   const [submiting, setSubmiting] = React.useState(false);
+
+  const [validating, setValidating] = React.useState(false);
 
 
   const maxSteps = steps.length;
@@ -281,7 +293,7 @@ export default function Checkout() {
         setState(state => ({...state, finalResults: [res]}));
 
         setSubmiting(false);
-        setActiveStep(state.activeStep + 1);
+        setActiveStep(activeStep + 1);
        }).catch(err =>
        {
          console.error(`Error :  ${err}`);
@@ -302,28 +314,40 @@ export default function Checkout() {
   }
 
 
-  const handleNext = () => {
+  const handleNext = async () => {
 
-    if (state.activeStep === 4)
-    {
-      // if (!state.dataConfirmed)
-      // {
-      //   setState(state => ({...state, dataConfirmedError : true }));
-      //   return;
-      // }
+    // if (activeStep === 5)
+    // {
+    //   // if (!state.dataConfirmed)
+    //   // {
+    //   //   setState(state => ({...state, dataConfirmedError : true }));
+    //   //   return;
+    //   // }
   
 
-      setSubmiting(true);
-      submitForm();
+    //   setSubmiting(true);
+    //   submitForm();
 
-    }else if (ValidateStep(state, setState, state.activeStep)) {
+    // }else 
     
-        setActiveStep(state.activeStep + 1);
+    try{
+      setValidating(true)
+      const isValid = await ValidateStep(state, setState, activeStep)
+      setValidating(false)
+
+      if (isValid) {
+        setActiveStep(activeStep + 1);
+       }
+    }
+    catch(ex)
+    {
+      console.error(ex)
+      setValidating(false)
     }
   };
 
   const handleBack = () => {
-    setActiveStep(state.activeStep - 1);
+    setActiveStep(activeStep - 1);
   };
 
   return (
@@ -363,18 +387,18 @@ export default function Checkout() {
         <Paper className={classes.paper}>
 
 
-          {state.activeStep <= 4 && (
+          {activeStep <= 4 && (
             <Typography component="h1" variant="h6" align="center">
               Book Appointment Online
             </Typography>
           )}
 
           <React.Fragment>
-            {state.activeStep < steps.length ? (
+            {activeStep < steps.length ? (
               <React.Fragment>
                 <BrowserView>
                   <Stepper
-                    activeStep={state.activeStep}
+                    activeStep={activeStep}
                     className={classes.stepper}
                   >
                     {steps.map((label) => (
@@ -390,7 +414,7 @@ export default function Checkout() {
                     steps={maxSteps}
                     position="static"
                     variant="progress"
-                    activeStep={state.activeStep}
+                    activeStep={activeStep}
                   />
                 </MobileView>
               </React.Fragment>
@@ -402,13 +426,13 @@ export default function Checkout() {
           {/* <PersonsBox/> */}
 
           <React.Fragment>
-            {state.activeStep === steps.length ? (
+            {activeStep === steps.length ? (
               <ResultsForm />
             ) : (
               <React.Fragment>
-                {getStepContent(state.activeStep)}
+                {getStepContent(activeStep)}
                 <div className={classes.buttons}>
-                  {state.activeStep !== 0 && (
+                  {activeStep !== 0 && (
                     <Button
                       disabled={submiting}
                       onClick={handleBack}
@@ -419,7 +443,7 @@ export default function Checkout() {
                     </Button>
                   )}
 
-                  {(state.activeStep === 2 || state.activeStep === 3) &&
+                  {(activeStep === 2 || activeStep === 3) &&
                     state.persons &&
                     state.persons.length >= 1 && (
                       <Button
@@ -433,16 +457,19 @@ export default function Checkout() {
                       </Button>
                     )}
 
-                  <Button
-                    disabled={submiting}
+              {activeStep < steps.length - 1 && (
+                <Button
+                    disabled={submiting || (activeStep === steps.length - 2 && !state.bookingRef)}
                     variant="contained"
                     color="primary"
                     onTouchTap={handleNext}
                     onClick={handleNext}
                     className={classes.button}
                   >
-                    {state.activeStep === steps.length - 1 ? "Submit" : "Next"}
+                    {activeStep === steps.length - 2 ? "Proceed to Payment" : "Next"}
                   </Button>
+              )}
+                  
                 </div>
               </React.Fragment>
             )}
@@ -568,7 +595,7 @@ export default function Checkout() {
           </DialogActions>
         </Dialog>
 
-        <Backdrop className={classes.backdrop} open={submiting}>
+        <Backdrop className={classes.backdrop} open={submiting || validating}>
                   <Grid container direction="column" justify="center" alignItems="center" spacing={2}>
                          <Grid item>
                             <CircularProgress color="inherit" />
