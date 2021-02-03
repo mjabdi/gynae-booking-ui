@@ -1,240 +1,121 @@
-import React, { Component } from 'react';
+import "./sqpaymentform.css";
+import React from "react";
+import {
+  SquarePaymentForm,
+  CreditCardNumberInput,
+  CreditCardExpirationDateInput,
+  CreditCardPostalCodeInput,
+  CreditCardCVVInput,
+  CreditCardSubmitButton,
+} from "react-square-payment-form";
+import { Grid } from "@material-ui/core";
+import PaymentService from "./services/PaymentService";
 
-const styles = {
-  name: {
-    verticalAlign: 'top',
-    display: 'none',
-    margin: 0,
-    border: 'none',
-    fontSize: "16px",
-    fontFamily: "Helvetica Neue",
-    padding: "16px",
-    color: "#373F4A",
-    backgroundColor: "transparent",
-    lineHeight: "1.15em",
-    placeholderColor: "#000",
-    _webkitFontSmoothing: "antialiased",
-    _mozOsxFontSmoothing: "grayscale",
-  },
-  leftCenter: {
-    float: 'left',
-    textAlign: 'center'
-  },
-  blockRight: {
-    display: 'block',
-    float: 'right'
-  },
-  center: {
-    textAlign: 'center'
-  },
+
+const SANDBOX = false
+
+const LIVE_APPLICATION_ID = "sq0idp-8-tRTRJuDMDeTBHxJq02xg";  // Live
+const LIVE_LOCATION_ID = "L2SBNYPV0XWVJ";                     //Live   
+
+const SANDBOX_APPLICATION_ID = "sandbox-sq0idb-HxCN0_lvfnlC15ZMFkUCdQ";  //SANDBOX
+const SANDBOX_LOCATION_ID = "LBR8YPCPR878R";                             // SANDBOX
 
 
 
-  enterCardLabel:{
-    float: 'left',
-    textAlign: 'center',
-    color : 'red'
-  }
-}
 
-export default class PaymentForm extends Component {
-  constructor(props){
+export default class PaymentForm extends React.Component {
+  constructor(props) {
     super(props);
     this.state = {
-      cardBrand: "",
-      nonce: undefined,
-      googlePay: false,
-      applePay: false,
-      masterpass: false
-    }
-    this.requestCardNonce = this.requestCardNonce.bind(this);
-  }
-
-  requestCardNonce(){
-    this.paymentForm.requestCardNonce();
-  }
-
-  componentDidMount(){
-    const config = {
-      applicationId: "sandbox-sq0idb-HxCN0_lvfnlC15ZMFkUCdQ",
-      locationId: "LZQKM407G107H",
-      inputClass: "sq-input",
-      autoBuild: false,
-      inputStyles: [
-        {
-          fontSize: "16px",
-          fontFamily: "Helvetica Neue",
-          padding: "16px",
-          color: "#373F4A",
-          backgroundColor: "transparent",
-          lineHeight: "1.15em",
-          placeholderColor: "#000",
-          _webkitFontSmoothing: "antialiased",
-          _mozOsxFontSmoothing: "grayscale"
-        }
-      ],
-      applePay: {
-        elementId: 'sq-apple-pay'
-      },
-      masterpass: {
-        elementId: 'sq-masterpass'
-      },
-      googlePay: {
-        elementId: 'sq-google-pay'
-      },
-      cardNumber: {
-        elementId: "sq-card-number",
-        placeholder: "• • • •  • • • •  • • • •  • • • •"
-      },
-      cvv: {
-        elementId: "sq-cvv",
-        placeholder: "CVV"
-      },
-      expirationDate: {
-        elementId: "sq-expiration-date",
-        placeholder: "MM/YY"
-      },
-      postalCode: {
-        elementId: "sq-postal-code",
-        placeholder: "Zip"
-      },
-      callbacks: {
-        methodsSupported: (methods) => {
-          if(methods.googlePay){
-            this.setState({
-              googlePay: methods.googlePay
-            })
-          }
-          if(methods.applePay){
-            this.setState({
-              applePay: methods.applePay
-            })
-          }
-          if(methods.masterpass){
-            this.setState({
-              masterpass: methods.masterpass
-            })
-          }
-          return;
-        },
-        createPaymentRequest: () => {
-          return {
-            requestShippingAddress: false,
-            requestBillingInfo: true,
-            currencyCode: "GBP",
-            countryCode: "UK",
-            total: {
-              label: "MERCHANT NAME",
-              amount: "100",
-              pending: false
-            },
-            lineItems: [
-              {
-                label: "Subtotal",
-                amount: "100",
-                pending: false
-              }
-            ]
-          };
-        },
-        cardNonceResponseReceived: (errors, nonce, cardData) => {
-          if (errors) {
-            // Log errors from nonce generation to the Javascript console
-            console.log("Encountered errors:");
-            errors.forEach(function(error) {
-              console.log("  " + error.message);
-            });
-
-            return;
-          }
-          this.setState({
-            nonce: nonce
-          })
-        },
-        unsupportedBrowserDetected: () => {
-        },
-        inputEventReceived: (inputEvent) => {
-          switch (inputEvent.eventType) {
-            case "focusClassAdded":
-              break;
-            case "focusClassRemoved":
-              break;
-            case "errorClassAdded":
-              document.getElementById("error").innerHTML =
-                "Please fix card information errors before continuing.";
-              break;
-            case "errorClassRemoved":
-              document.getElementById("error").style.display = "none";
-              break;
-            case "cardBrandChanged":
-              if(inputEvent.cardBrand !== "unknown"){
-                this.setState({
-                  cardBrand: inputEvent.cardBrand
-                })
-              } else {
-                this.setState({
-                  cardBrand: ""
-                })
-              }
-              break;
-            case "postalCodeChanged":
-              break;
-            default:
-              break;
-          }
-        },
-        paymentFormLoaded: function() {
-          document.getElementById('name').style.display = "inline-flex";
-        }
-      }
+      personInfo: props.personInfo,
+      errorMessages: [],
     };
-    this.paymentForm = new this.props.paymentForm(config);
-    this.paymentForm.build();
+
+    this.cardNonceResponseReceived = this.cardNonceResponseReceived.bind(this);
+    this.createVerificationDetails = this.createVerificationDetails.bind(this);
   }
 
-  render(){
-    return (
-      <div className="container">
-        <div id="form-container">
-          <div id="sq-walletbox">
-            <button style={{display: (this.state.applePay) ? 'inherit': 'none'}}
-                    className="wallet-button"
-                    id="sq-apple-pay"></button>
-            <button style={{display: (this.state.masterpass) ? 'block': 'none'}}
-                    className="wallet-button"
-                    id="sq-masterpass"></button>
-            <button style={{display: (this.state.googlePay) ? 'inherit': 'none'}}
-                    className="wallet-button"
-                    id="sq-google-pay"></button>
-            <hr />
-          </div>
+  cardNonceResponseReceived = async (
+    errors,
+    nonce,
+    cardData,
+    buyerVerificationToken
+  ) => {
+    if (errors) {
+      this.setState({ errorMessages: errors.map((error) => error.message) });
+      return;
+    }
 
-          <div id="sq-ccbox">
-            <p>
-              <span style={styles.enterCardLabel} >Enter Card Info Below </span>
-              <span style={styles.blockRight}>
-                {this.state.cardBrand.toUpperCase()}
-              </span>
-            </p>
-            <div id="cc-field-wrapper">
-              <div id="sq-card-number"></div>
-              <input type="hidden" id="card-nonce" name="nonce" />
-              <div id="sq-expiration-date"></div>
-              <div id="sq-cvv"></div>
-            </div>
-            <input
-              id="name"
-              style={styles.name}
-              type="text"
-              placeholder="Name"
-            />
-            <div id="sq-postal-code"></div>
-          </div>
-          <button className="button-credit-card"
-                  onClick={this.requestCardNonce}>Pay</button>
+    this.setState({ errorMessages: [] });
+
+    try{
+        this.props.onStart()
+        const result = await PaymentService.doPayment({nonce: nonce, token: buyerVerificationToken, personInfo: this.state.personInfo})
+        console.log(result)
+        this.props.onComplete(result)
+    }
+    catch(ex)
+    {
+        console.error(ex)
+        this.props.onError(ex)
+    }
+  };
+
+  createVerificationDetails() {
+    return {
+      amount: "100.00",
+      currencyCode: "GBP",
+      intent: "CHARGE",
+      billingContact: {
+        name: this.state.personInfo.fullname,
+        email: this.state.personInfo.email,
+        phone:  this.state.personInfo.phone,
+      },
+    };
+  }
+
+  render() {
+    return (
+      <React.Fragment>
+        <Grid container justify="center" alignItems="center">
+          <Grid item>
+            <SquarePaymentForm
+              sandbox={SANDBOX}
+              applicationId={SANDBOX ? SANDBOX_APPLICATION_ID : LIVE_APPLICATION_ID}
+              locationId={SANDBOX ? SANDBOX_LOCATION_ID : LIVE_LOCATION_ID}
+              cardNonceResponseReceived={this.cardNonceResponseReceived}
+              createVerificationDetails={this.createVerificationDetails}
+            >
+              <fieldset className="sq-fieldset">
+
+                <CreditCardNumberInput/>
+             
+
+                <div className="sq-form-third">
+                  <CreditCardExpirationDateInput />
+                </div>
+
+                {/* <div className="sq-form-third">
+                  <CreditCardPostalCodeInput />
+                </div> */}
+
+                <div className="sq-form-third">
+                  <CreditCardCVVInput />
+                </div>
+              </fieldset>
+
+              <CreditCardSubmitButton>Pay £100.00</CreditCardSubmitButton>
+
+            </SquarePaymentForm>
+          </Grid>
+        </Grid>
+
+        <div className="sq-error-message">
+          {this.state.errorMessages.map((errorMessage) => (
+            <li key={`sq-error-${errorMessage}`}>{errorMessage}</li>
+          ))}
         </div>
-        <p style={styles.center} id="error"></p>
-      </div>
-    )
+      </React.Fragment>
+    );
   }
 }

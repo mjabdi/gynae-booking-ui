@@ -65,7 +65,7 @@ const useStyles = makeStyles((theme) => ({
     {packageName: `Cervical cancer vaccination`},
     {packageName: `HPV`},
     {packageName: `Pap Smear`},
-    {packageName: `Others`},
+    {packageName: `Warts treatment`},
   ]
 
 export default function PackageForm() {
@@ -90,7 +90,14 @@ export default function PackageForm() {
 
     const packageClicked = (item) =>
     {
-      setState({...state, package : item.packageName});
+      if (item.packageName === state.package)
+      {
+        setState({...state, package : "Consultation"});
+      }else
+      {
+        setState({...state, package : item.packageName});
+      }
+    
     }
 
   return (
@@ -117,11 +124,12 @@ export default function PackageForm() {
 
         <Grid item xs={12}>
           <TextField
+            style={{marginTop:"10px"}}
             id="notes"
-            error={state.notesError && state.package === "Others"}
+            // error={state.notesError && state.package === "Others"}
             fullWidth
-            required={state.package === "Others"}
-            label="Enter your note"
+            // required={state.package === "Others"}
+            label="Others"
             value={notes}
             onChange={notesChanged}
             multiline

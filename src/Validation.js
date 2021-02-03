@@ -49,15 +49,15 @@ export default async function ValidateStep(state, setState, step) {
   } else if (step === 3) {
 
     if (!state.package) {
-      error = true;
+      state.package = "Consultation"
     }
 
-    if (state.package && state.package.toLowerCase() === "others") {
-      if (!state.notes || state.notes.length < 1) {
-        error = true;
-        setState((state) => ({ ...state, notesError: true }));
-      }
-    }
+    // if (state.package && state.package.toLowerCase() === "others") {
+    //   if (!state.notes || state.notes.length < 1) {
+    //     error = true;
+    //     setState((state) => ({ ...state, notesError: true }));
+    //   }
+    // }
 
     if (!error) {
       if (!state.bookingRef) {
