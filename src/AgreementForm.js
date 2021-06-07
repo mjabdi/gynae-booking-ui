@@ -437,21 +437,40 @@ useEffect( () => {
                         aria-labelledby="scroll-dialog-title"
                         aria-describedby="scroll-dialog-description"
                       >
-                        <DialogTitle id="scroll-dialog-title">Application Disclaimer</DialogTitle>
-                        <DialogContent dividers={scroll === 'paper'}>
-                          <DialogContentText
-                            id="scroll-dialog-description"
-                            ref={descriptionElementRef}
-                            tabIndex={-1}
-                          >
-                            <div style={{textAlign:"justify", padding:"10px"}}>
-                              Medical Express Clinic will not contact you for any other reason than to share your test results, and certificate if selected, via the email address provided. The information provided to us via this registration form is never shared with any other organisations, except when this is required by law. 
+          <DialogTitle id="scroll-dialog-title">
+              PRIVACY NOTICE
+          </DialogTitle>
+          <DialogContent dividers={scroll === "paper"}>
+            <DialogContentText
+              id="scroll-dialog-description"
+              ref={descriptionElementRef}
+              tabIndex={-1}
+            >
+              <div style={{ textAlign: "justify", padding: "0px", color:"#333" }}>
+                <p>
+                  Medical Express Clinic collects and holds the personal data of patients registered at the clinic so as to provide safe and effective ongoing care for our patients.
+                </p>
+                <p>
+                  Medical records are kept confidentially and securely under lock and key or securely on our server. They are primarily used for the safe and effective delivery of care.
+                </p>  
+                <p>
+                  Your medical record may be subject to clinical audit and management review in order for Medical Express Clinic to maintain and improve our provision of care.
+                </p>
+                <p>
+                  Please review our Patient Information handout, given to you prior to registration for more information.
+                </p>
+                <p>
+                  If you would like to review a full copy of our Privacy and Decency Policy, please ask at reception.
+                </p>
+                <p>
+                  Thank you
+                </p>
+                <p>
+                  Medical Express Clinic
+                </p>
 
-                                Information provided will never be used for marketing purposes, you cannot opt in.
-
-                                In the case of a positive swab result, our doctor will call on the telephone number provided to inform you of your result and provide additional advice or guidance.
-                          </div>
-                          </DialogContentText>
+              </div>
+            </DialogContentText>
                         </DialogContent>
                         <DialogActions>
                           <Button onClick={handleClose} color="primary">
