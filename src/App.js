@@ -22,6 +22,7 @@ function App() {
     activeStep: 0,
     bookingDate: null,
     persons: [],
+    getStarted: true
   });
 
   useEffect(() => {
@@ -30,7 +31,7 @@ function App() {
     if (bookingId) {
       BookService.getBookingById(bookingId)
         .then((res) => {
-          if (res.data) {
+          if (res.data) { 
             const booking = res.data;
             setState((state) => ({ ...state, firstname: booking.forename }));
             setState((state) => ({ ...state, lastname: booking.surname }));
@@ -64,9 +65,10 @@ function App() {
         <CssBaseline />
         <GlobalStyles />
         <div className="App">
-          {!state.getStarted && <WelcomeForm />}
-          {state.getStarted && !state.agreed && <AgreementForm />}
-          {state.getStarted && state.agreed && <Checkout />}
+          {/* {!state.getStarted && <WelcomeForm />} */}
+          {/* {state.getStarted && !state.agreed && <AgreementForm />} */}
+          {/* {state.getStarted && state.agreed && <Checkout />} */}
+          <Checkout />
         </div>
       </MuiThemeProvider>
     </GlobalState.Provider>
