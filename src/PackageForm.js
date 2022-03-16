@@ -63,8 +63,8 @@ const useStyles = makeStyles((theme) => ({
     {packageName: `Pre-pregnancy/Fertility check`},
     {packageName: `Gynaecological ultrasound`},
     {packageName: `Cervical cancer vaccination`},
-    {packageName: `HPV`},
-    {packageName: `Pap Smear`},
+    {packageName: `HPV Vaccination`},
+    {packageName: `Cervical/Pap Smear`},
     {packageName: `Warts treatment`},
   ]
 
