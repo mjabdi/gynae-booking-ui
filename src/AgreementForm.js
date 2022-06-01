@@ -15,7 +15,7 @@ import TimeForm from './TimeForm';
 import InformationForm from './InformationForm';
 import ReviewForm from './ReviewForm';
 import GlobalState from './GlobalState';
-import AddressForm from './PackageForm';
+// import AddressForm from './AddressForm';
 import BookService from './services/BookService';
 
 import Dialog from '@material-ui/core/Dialog';
@@ -116,25 +116,20 @@ const useStyles = makeStyles((theme) => ({
   },
   privacyButton: {
     marginBottom : "20px",
-    width: "115px",
-    color:"#fff",
-    backgroundColor : "#444",
-    "&:hover": {
-      background: "#000",
-      color: "#fff"
-    },
+    width: "115px"
   },
 
   faqButton: {
     marginBottom : "20px",
     marginLeft : "10px",
-    backgroundColor : "#444",
-    "&:hover": {
-      background: "#000",
-      color: "#fff"
-    },
-    width: "115px",
-    color:"#fff"
+    // backgroundColor : "#2f942e",
+    // "&:hover": {
+    //   background: "green",
+    //   color: "#fff"
+    // },
+    textDecoration : "none !important",
+    width: "115px"
+
   },
 
   getStartedButton: {
@@ -262,18 +257,21 @@ export default function AgreementForm() {
 
 
 const getAgreeClicked = (event) => {
-    if (check.check1 && check.check2 && check.check3 && check.check4 && check.check5)
-    {
-        setState(state => ({...state, agreed: true}));
-    }
-    else
-    {
-        setError(true);
-    }
+
+  setState(state => ({...state, agreed: true}));
+
+    // if (check.check1 && check.check2 && check.check3 && check.check4)
+    // {
+    //     setState(state => ({...state, agreed: true}));
+    // }
+    // else
+    // {
+    //     setError(true);
+    // }
 }
 
 useEffect( () => {
-  if (check.check1 && check.check2 && check.check3 && check.check4 && check.check5)
+  if (check.check1 && check.check2 && check.check3 && check.check4)
   {
     setError(false);
   }
@@ -318,13 +316,22 @@ useEffect( () => {
               Patients wishing to book an appointment must confirm that:
           </Typography>
 
+            <ul style={{fontSize:"1.1rem", color:"#333", textAlign:"left"}}>
+              <li style={{marginTop:"15px"}}>
+                {`I do not have any symptoms of COVID-19.`}
+              </li>
+              <li style={{marginTop:"15px"}}>
+                {`I have not been in contact recently with a confirmed COVID-19 case.`}
+              </li>
+            </ul>
+                  
 
-                <Grid container  direction="column"  justify="flex-start" alignItems="flex-start" spacing={3}>
+                {/* <Grid container  direction="column"  justify="flex-start" alignItems="flex-start" spacing={3} style={{textAlign:"left"}}>
 
                 <Grid item xs={12}  >
 
                         <FormControlLabel 
-                            control={<Checkbox  color="secondary" name="check1" checked={check.check1} onChange={(event => checkClicked(event,1))} />}
+                            control={<Checkbox  color="primary" name="check1" checked={check.check1} onChange={(event => checkClicked(event,1))} />}
                             label={<span style={{ fontSize: '1rem' }}>{`I do not have a fever`} 
                             </span>}
                         />
@@ -333,7 +340,7 @@ useEffect( () => {
                 <Grid item xs={12}  >
 
                         <FormControlLabel
-                                    control={<Checkbox color="secondary" name="check2"checked={check.check2} onChange={(event => checkClicked(event,2))} />}
+                                    control={<Checkbox color="primary" name="check2"checked={check.check2} onChange={(event => checkClicked(event,2))} />}
                                     label={<span style={{ fontSize: '1rem' }}>{`I do not have a new, continuous cough`} 
                                     </span>}
                                 />
@@ -342,7 +349,7 @@ useEffect( () => {
                 <Grid item xs={12}  >
 
                     <FormControlLabel
-                                control={<Checkbox color="secondary" name="check3" checked={check.check3} onChange={(event => checkClicked(event,3))} />}
+                                control={<Checkbox color="primary" name="check3" checked={check.check3} onChange={(event => checkClicked(event,3))} />}
                                 label={<span style={{ fontSize: '1rem' }}>{`I do not have shortness of breath`} 
                                 </span>}
                             />
@@ -352,22 +359,13 @@ useEffect( () => {
                 <Grid item xs={12}  >
 
                     <FormControlLabel style={{ fontSize: '1rem', textAlign:"justify" }}
-                                control={<Checkbox color="secondary" name="check4" checked={check.check4} onChange={(event => checkClicked(event,4))}  />}
+                                control={<Checkbox color="primary" name="check4" checked={check.check4} onChange={(event => checkClicked(event,4))}  />}
                                 label={<span style={{ fontSize: '1rem', textAlign:"left" }}>{`I have not been in contact with someone suspected or known to have coronavirus`} 
                                 </span>}
                             />
                     </Grid>
 
-                    <Grid item xs={12}  >
-
-                        <FormControlLabel style={{ fontSize: '1rem', textAlign:"justify" }}
-                                    control={<Checkbox color="secondary" name="check5" checked={check.check5} onChange={(event => checkClicked(event,5))}  />}
-                                    label={<span style={{ fontSize: '1rem', textAlign:"left" }}>{`I confirm that this appointment is for a Fit to Fly PCR Test, not for the Test to Release scheme.`} 
-                                    </span>}
-                                />
-                        </Grid>
-
-                </Grid>
+                </Grid> */}
 
              
 
@@ -375,15 +373,15 @@ useEffect( () => {
 
                
 
-            <p className={isMobile ? classes.textContentMobile : classes.textContent}>
-                 If you cannot confirm all the points stated above, you must not proceed any further and must self-isolate for the next 14 days. Please click the box to agree to these terms.
+            <p className={isMobile ? classes.textContentMobile : classes.textContent} style={{background:"#ffe8e8", color : "#990000", padding:"10px", borderRadius: "8px"}}>
+                If you cannot confirm all the point stated above, you must not proceed any further. Please click the "Agree" button to agree to these terms.
             </p>
 
             {error && (
                 <Alert severity="error">You need to check all the terms to proceed! </Alert>
             )}
             
-
+{/* 
         <Button 
                 // variant="contained" 
                 className={classes.getStartedButton} 
@@ -393,7 +391,7 @@ useEffect( () => {
                 onTouchTap={backButtonClicked} 
                 >
         Back
-        </Button>
+        </Button> */}
 
           <Button 
                   variant="contained" 
