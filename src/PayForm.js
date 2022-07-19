@@ -96,6 +96,7 @@ export default function PayForm() {
       bookingTime: state.bookingTime,
       bookingRef: state.bookingRef,
       referrer: referrer,
+      smsPush: state.smsPush
     };
 
     setPersonInfo(_personInfo);

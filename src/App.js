@@ -22,7 +22,8 @@ function App() {
     activeStep: 0,
     bookingDate: null,
     persons: [],
-    getStarted: true
+    getStarted: true,
+    smsPush: true,
   });
 
   useEffect(() => {

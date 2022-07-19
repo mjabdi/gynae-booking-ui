@@ -89,7 +89,10 @@ export default function InformationForm() {
     const [phone, setPhone] = React.useState(state.phone ?? '');
     
     
-   
+    const smsPushClicked = (event) =>
+    {
+      setState(state=>({...state,smsPush: event.target.checked}))
+    }
 
     useEffect(() => {
       window.scrollTo(0, 0)
@@ -196,6 +199,19 @@ export default function InformationForm() {
                         onChange = {retypeEmailChanged} 
                         // helperText = 'This email address is where you will receive your results. Please tick the box below to confirm that this is a private email address to which you are happy for us to send your results.'
              />  
+        </Grid>
+
+        <Grid item xs={12} >
+          <div style={{ textAlign: "left", fontWeight: "500", fontSize: "0.9rem", padding: "10px", border: "1px solid #999", borderRadius: "8px", lineHeight: "1.5rem", backgroundColor: "#fafafa", marginTop: "0px" }}>
+            <FormControlLabel style={{ textAlign: "justify" }}
+              control={<Checkbox color="primary" name="check1" checked={state.smsPush} onChange={(event => smsPushClicked(event))} />}
+              label={<span style={{ fontSize: '0.9rem', fontWeight: "500", color: state.check_nogp_error ? "red" : "#555" }}>
+                {
+                  `Please send me sms notifications (optional)`
+                }
+              </span>}
+            />
+          </div>
         </Grid>
 
         {/* <Grid item xs={12} className={classes.formControl} >
