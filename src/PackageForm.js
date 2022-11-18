@@ -56,16 +56,15 @@ const useStyles = makeStyles((theme) => ({
   }));
 
   const Packages = [
-    {packageName: 'Private Consultation'},
-    {packageName: `Coil fitting/Coil removal`},
-    {packageName: `Well Woman Check`},
-    {packageName: `Sexual health screening`},
-    {packageName: `Pre-pregnancy/Fertility check`},
-    {packageName: `Gynaecological ultrasound`},
-    {packageName: `Cervical cancer vaccination`},
-    {packageName: `HPV Vaccination`},
-    {packageName: `Cervical/Pap Smear`},
-    {packageName: `Warts treatment`},
+    {packageName: 'Private Consultation', price: "£150"},
+    {packageName: `Coil fitting/Coil removal`, price: "from £400"},
+    {packageName: `Well Woman Check`, price: "from £595"},
+    {packageName: `Sexual health screening`, price: "from £250"},
+    {packageName: `Pre-pregnancy/Fertility check`, price: "from £150"},
+    {packageName: `Gynaecological ultrasound`, price: "£350"},
+    {packageName: `HPV Vaccination`, price: "£275"},
+    {packageName: `Cervical/Pap Smear`, price: "£250"},
+    {packageName: `Warts treatment`, price: "from £350"},
   ]
 
 export default function PackageForm() {
@@ -95,7 +94,7 @@ export default function PackageForm() {
         setState({...state, package : "Consultation"});
       }else
       {
-        setState({...state, package : item.packageName});
+        setState({...state, package : item.packageName, packagePrice: item.price});
       }
     
     }
@@ -117,7 +116,7 @@ export default function PackageForm() {
               }
               onClick={() => packageClicked(item)}
             >
-              {item.packageName}
+              {item.packageName} <span style={{dispaly:"inline-block", color:`${item.packageName === state.package ? "#fff" : "#dc2ee8"}`, float:"right", fontSize:"0.85em"}}>{"" + item.price + ""} </span>
             </div>
           </Grid>
         ))}
