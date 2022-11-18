@@ -116,7 +116,10 @@ export default function PackageForm() {
               }
               onClick={() => packageClicked(item)}
             >
-              {item.packageName} <span style={{dispaly:"inline-block", color:`${item.packageName === state.package ? "#fff" : "#dc2ee8"}`, float:"right", fontSize:"0.85em"}}>{"" + item.price + ""} </span>
+              {item.packageName} 
+              
+              {/* <span style={{dispaly:"inline-block", color:`${item.packageName === state.package ? "#fff" : "#dc2ee8"}`, float:"right", fontSize:"0.85em"}}>{"" + item.price + ""} </span> */}
+            
             </div>
           </Grid>
         ))}
