@@ -57,8 +57,9 @@ const useStyles = makeStyles((theme) => ({
 
   const Packages = [
     {packageName: 'Private Consultation', price: "£150"},
-    {packageName: `Coil fitting/Coil removal`, price: "from £400"},
     {packageName: `Well Woman Check`, price: "from £595"},
+    {packageName: `COPPER Coil fitting/removal`, price: "from £400"},
+    {packageName: `MINERA Coil fitting/removal`, price: "from £400"},
     {packageName: `Sexual health screening`, price: "from £250"},
     {packageName: `Pre-pregnancy/Fertility check`, price: "from £150"},
     {packageName: `Gynaecological ultrasound`, price: "£350"},
