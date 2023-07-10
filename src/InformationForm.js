@@ -87,6 +87,17 @@ export default function InformationForm() {
     const [emailConfirmed, setEmailConfirmed] = React.useState(state.emailConfirmed ?? false);
 
     const [phone, setPhone] = React.useState(state.phone ?? '');
+
+    const [birthDate, setBirthDate] = React.useState(state.birthDate ?? null);
+
+    const birthDateChanged = (dateStr) =>
+    {
+  
+        setBirthDate(dateStr);
+        setState(state => ({...state, birthDate: dateStr}));
+        setState(state => ({...state, birthDateError : false}));
+    }  
+
     
     
     const smsPushClicked = (event) =>
@@ -199,6 +210,17 @@ export default function InformationForm() {
                         onChange = {retypeEmailChanged} 
                         // helperText = 'This email address is where you will receive your results. Please tick the box below to confirm that this is a private email address to which you are happy for us to send your results.'
              />  
+        </Grid>
+
+        <Grid item xs={12} md={12}>
+               <DateField
+                error={state.birthDateError}
+                title="Date of Birth"
+                value={birthDate}
+                dateChanged={birthDateChanged}
+             >
+
+             </DateField>
         </Grid>
 
         <Grid item xs={12} >
