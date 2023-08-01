@@ -24,6 +24,7 @@ function App() {
     persons: [],
     getStarted: true,
     smsPush: true,
+    agreed: true,
   });
 
   useEffect(() => {
