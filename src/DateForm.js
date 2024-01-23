@@ -134,14 +134,7 @@ export default function DateForm() {
   const checkFullyBooked = (date) =>
   {
     var result = false;
-
-    // if (isWeekend(date))
-    //   return true
-
     // console.log(getDay(date))
-
-    if (getDay(date) === 1 || getDay(date) === 2 || getDay(date) === 3 ||  getDay(date) === 6 ||  getDay(date) === 0)
-      return true  
 
     if (dateformat(date,'yyyy-mm-dd') < dateformat(firstAvailableDay,'yyyy-mm-dd'))
     {
