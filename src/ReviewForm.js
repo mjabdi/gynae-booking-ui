@@ -277,7 +277,7 @@ export default function ReviewForm() {
                       {/* <span style={{dispaly:"inline-block", color:`#ea56f5`, fontWeight:"500"}}>{ state.packagePrice ? ` - ${state.packagePrice}` : ""} </span> */}
                     </li>
 
-                    <li className={classes.li}>
+                    {/* <li className={classes.li}>
                       <span className={classes.infoTitleTime}>
                         <FontAwesomeIcon
                           icon={faNotesMedical}
@@ -286,7 +286,7 @@ export default function ReviewForm() {
                         Package Price:
                       </span>
                       <span style={{dispaly:"inline-block", color:`#e028ed`, fontWeight:"500"}}>{ state.packagePrice ? `${state.packagePrice}` : "-"} </span>
-                    </li>
+                    </li> */}
 
 
 
